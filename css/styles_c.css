@@ -1,0 +1,161 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 200px;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar ul li a i {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.sidebar ul li a:hover {
+    color: #007bff;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+/* Header del Main Content */
+.main-content .header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.main-content .header h1 {
+    font-size: 1.5em;
+    margin: 0;
+    color: #333;
+}
+
+/* Cards de Contratos */
+.contracts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.contract-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 15px;
+    transition: border-color 0.3s ease;
+}
+
+.contract-card:hover {
+    border-color: #007bff;
+}
+
+.contract-card h2 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.contract-card p {
+    font-size: 0.9em;
+    margin: 5px 0;
+    color: #555;
+}
+
+.contract-card .status {
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 0.8em;
+}
+
+.contract-card .status.pagar {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.contract-card .status.pagado {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.contract-card .status.no-pagado {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.contract-card .status.desconocido {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 10px;
+    }
+
+    .sidebar h2 {
+        text-align: center;
+    }
+
+    .sidebar ul {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .sidebar ul li {
+        margin: 10px 0;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+}
