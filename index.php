@@ -9,12 +9,22 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Tu hoja de estilos personalizada -->
   <link rel="stylesheet" href="css/styles_inicio_sesion.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <title>Inicio</title>
+  <style>
+    /* Estilos para el mensaje de error */
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none; /* Oculto por defecto */
+    }
+  </style>
 </head>
 <body>
   <div class="container" id="container">
     <div class="form-container sign-in">
-      <form action="iniciar_sesion.php" method="POST">
+      <form id="loginForm" action="iniciar_sesion.php" method="POST" onsubmit="return validateCredentials()">
         <h1>INICIAR SESIÓN</h1>
         <hr>
         <?php if (isset($_GET['error'])): ?>
@@ -28,6 +38,10 @@
         <i class="fa-solid fa-unlock"></i>
         <label for="password">Contraseña</label>
         <input type="password" name="password" id="password" placeholder="Contraseña" required>
+        
+        <!-- Mensaje de error -->
+        <p id="errorMessage" class="error-message">Datos incorrectos, intente de nuevo</p>
+        
         <hr>
         <button type="submit">Iniciar Sesión</button>
       </form>
@@ -41,5 +55,28 @@
       </div>
     </div>
   </div>
+
+  <script>
+    function validateCredentials() {
+      // Obtener los valores de los campos de usuario y contraseña
+      const usuario = document.getElementById('usuario').value;
+      const password = document.getElementById('password').value;
+
+      // Credenciales correctas
+      const correctUsuario = 'admin';
+      const correctPassword = '456';
+
+      // Validar las credenciales
+      if (usuario !== correctUsuario || password !== correctPassword) {
+        // Mostrar el mensaje de error
+        document.getElementById('errorMessage').style.display = 'block';
+        return false; // Evita que el formulario se envíe
+      }
+
+      // Ocultar el mensaje de error si las credenciales son correctas
+      document.getElementById('errorMessage').style.display = 'none';
+      return true; // Permite que el formulario se envíe
+    }
+  </script>
 </body>
 </html>

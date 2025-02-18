@@ -5,23 +5,23 @@ date_default_timezone_set('America/Mexico_City');
 function enviarWhatsApp($token, $to, $body) {
     $params = array(
         'token' => $token,
-        'to' => $to,
+        'to'   => $to,
         'body' => $body
     );
 
     $ultramsgCurl = curl_init();
     curl_setopt_array($ultramsgCurl, array(
-        CURLOPT_URL => "https://api.ultramsg.com/instance106245/messages/chat",
+        CURLOPT_URL            => "https://api.ultramsg.com/instance106245/messages/chat",
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "", 
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30,
+        CURLOPT_ENCODING       => "", 
+        CURLOPT_MAXREDIRS      => 10,
+        CURLOPT_TIMEOUT        => 30,
         CURLOPT_SSL_VERIFYHOST => 0,
         CURLOPT_SSL_VERIFYPEER => 0,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => http_build_query($params),
-        CURLOPT_HTTPHEADER => array(
+        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST  => "POST",
+        CURLOPT_POSTFIELDS     => http_build_query($params),
+        CURLOPT_HTTPHEADER     => array(
             "content-type: application/x-www-form-urlencoded"
         ),
     ));
@@ -34,7 +34,7 @@ function enviarWhatsApp($token, $to, $body) {
 }
 
 // Archivos de control
-$archivoLineas = 'lineas_procesadas.txt';
+$archivoLineas = 'lineas_procesadas_p.txt';
 $resetFile = 'last_reset.txt';
 
 // Reset diario a las 10:00 AM
@@ -52,16 +52,16 @@ if (file_exists($resetFile)) {
 }
 
 // Leer líneas procesadas
-$lineasProcesadas = file_exists($archivoLineas) 
-    ? file($archivoLineas, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) 
+$lineasProcesadas = file_exists($archivoLineas)
+    ? file($archivoLineas, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)
     : [];
 
 // Obtener todos los contratos
 $curl = curl_init();
 curl_setopt_array($curl, [
-    CURLOPT_URL => "https://erp.plazashoppingcenter.store/htdocs/api/index.php/contracts",
+    CURLOPT_URL            => "https://erp.plazashoppingcenter.store/htdocs/api/index.php/contracts",
     CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_HTTPHEADER => ['DOLAPIKEY: web123456789']
+    CURLOPT_HTTPHEADER     => ['DOLAPIKEY: web123456789']
 ]);
 
 echo '<!DOCTYPE html>
@@ -91,7 +91,7 @@ echo '<!DOCTYPE html>
         .desconocido { background: #9E9E9E; }
         .error-msg { color: #D32F2F; margin-top: 5px; }
         .success-msg { color: #388E3C; margin-top: 5px; }
-        .info-msg { color: #1976D2; margin-top: 5   px; }
+        .info-msg { color: #1976D2; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -124,14 +124,14 @@ if (($result = curl_exec($curl)) === false) {
                 // Buscar la última línea del contrato
                 foreach ($data["lines"] as $line) {
                     $dateStart = DateTime::createFromFormat('U', $line["date_start"]);
-                    $dateEnd = DateTime::createFromFormat('U', $line["date_end"]);
+                    $dateEnd   = DateTime::createFromFormat('U', $line["date_end"]);
                     
                     if ($dateStart && $dateEnd) {
                         if (!$recentLine || $dateStart > $recentLine["dateStart"]) {
                             $recentLine = [
-                                'id' => $line["id"],
+                                'id'        => $line["id"],
                                 'dateStart' => $dateStart,
-                                'dateEnd' => $dateEnd
+                                'dateEnd'   => $dateEnd
                             ];
                         }
                     }
@@ -148,15 +148,18 @@ if (($result = curl_exec($curl)) === false) {
                 $diferencia = $hoy->diff($finContrato);
                 $diasRestantes = $diferencia->days * ($diferencia->invert ? -1 : 1);
 
-                // Determinar mensaje
+                // Determinar mensaje según el estado del contrato
                 $mensaje = null;
                 if ($diasRestantes == 1) {
                     $mensaje = "Estimado cliente del {$data['ref_customer']}, le recordamos que su renta vence el día de mañana.";
-                } elseif ($diasRestantes <= 0) {
-                    $mensaje = "Estimado cliente del {$data['ref_customer']}, le recordamos que su renta está vencida. Por favor, pase a pagar. Gracias.";
+                } elseif ($diasRestantes == 0) {
+                    $mensaje = "Estimado cliente del {$data['ref_customer']}, le recordamos que su renta vence hoy. Por favor, pase a pagar.";
+                } elseif ($diasRestantes < 0) {
+                    $diasVencidos = abs($diasRestantes);
+                    $mensaje = "Estimado cliente del {$data['ref_customer']}, su renta lleva vencida {$diasVencidos} día(s). Por favor, pase a pagar. Gracias.";
                 }
 
-                // Procesar envío
+                // Procesar envío (se envía si hay mensaje y la línea no se ha procesado)
                 $errorMensaje = '';
                 $mensajeEnviado = false;
                 if ($mensaje && !in_array($recentLine['id'], $lineasProcesadas)) {
@@ -181,7 +184,7 @@ if (($result = curl_exec($curl)) === false) {
                     }
                 }
 
-                // Mostrar tarjeta
+                // Mostrar tarjeta de información
                 echo "<div class='contract-card'>";
                 echo "<h2><i class='fas fa-store'></i> {$data['ref_customer']}</h2>";
                 echo "<p><i class='fas fa-hashtag'></i> Referencia: {$data['ref']}</p>";
