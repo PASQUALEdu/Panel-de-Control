@@ -34,7 +34,7 @@ function enviarWhatsApp($token, $to, $body) {
 }
 
 // Archivos de control
-$archivoLineas = 'lineas_procesadas.txt';
+$archivoLineas = 'lineas_procesadas_p.txt';
 $resetFile = 'last_reset.txt';
 
 // Reset diario a las 10:00 AM
@@ -118,6 +118,11 @@ if (($result = curl_exec($curl)) === false) {
         echo "<div class='error'>Error al decodificar JSON</div>";
     } else {
         foreach ($contracts as $data) {
+            // Solo procesamos el contrato de ID 117
+            if (!isset($data['id']) || $data['id'] != 117) {
+                continue;
+            }
+            
             if ($data["nbofservicesopened"] >= 1) {
                 $recentLine = null;
                 
@@ -148,15 +153,18 @@ if (($result = curl_exec($curl)) === false) {
                 $diferencia = $hoy->diff($finContrato);
                 $diasRestantes = $diferencia->days * ($diferencia->invert ? -1 : 1);
 
-                // Determinar mensaje
+                // Determinar mensaje según el estado del contrato
                 $mensaje = null;
                 if ($diasRestantes == 1) {
                     $mensaje = "Estimado cliente del {$data['ref_customer']}, le recordamos que su renta vence el día de mañana.";
-                } elseif ($diasRestantes <= 0) {
-                    $mensaje = "Estimado cliente del {$data['ref_customer']}, le recordamos que su renta está vencida. Por favor, pase a pagar. Gracias.";
+                } elseif ($diasRestantes == 0) {
+                    $mensaje = "Estimado cliente del {$data['ref_customer']}, le recordamos que su renta vence hoy. Por favor, pase a pagar.";
+                } elseif ($diasRestantes < 0) {
+                    $diasVencidos = abs($diasRestantes);
+                    $mensaje = "Estimado cliente del {$data['ref_customer']}, su renta lleva vencida {$diasVencidos} día(s). Por favor, pase a pagar. Gracias.";
                 }
 
-                // Procesar envío
+                // Procesar envío (se envía si hay mensaje y aún no se ha procesado la línea)
                 $errorMensaje = '';
                 $mensajeEnviado = false;
                 if ($mensaje && !in_array($recentLine['id'], $lineasProcesadas)) {
@@ -181,14 +189,14 @@ if (($result = curl_exec($curl)) === false) {
                     }
                 }
 
-                // Mostrar tarjeta
+                // Mostrar tarjeta de información
                 echo "<div class='contract-card'>";
                 echo "<h2><i class='fas fa-store'></i> {$data['ref_customer']}</h2>";
                 echo "<p><i class='fas fa-hashtag'></i> Referencia: {$data['ref']}</p>";
                 echo "<p><i class='fas fa-calendar-alt'></i> Inicio: " . $recentLine['dateStart']->format('d-m-Y') . "</p>";
                 echo "<p><i class='fas fa-calendar-times'></i> Fin: " . $recentLine['dateEnd']->format('d-m-Y') . "</p>";
 
-                // Mostrar estado
+                // Mostrar estado según la cantidad de días restantes
                 $estadoClass = "desconocido";
                 if ($diasRestantes < 0) {
                     $estado = "VENCIDO HACE " . abs($diasRestantes) . " DÍAS";
