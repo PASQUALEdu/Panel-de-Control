@@ -22,29 +22,36 @@ if (isset($_POST['usuario']) && isset($_POST['password'])) {
         header("Location: index.php?error=La contraseña es requerida");
         exit();
     } else {
-        //$PASSWORD = md5($PASSWORD); // Descomenta si usas md5
-        $consulta = "SELECT * FROM personal WHERE usuario = '$USUARIO' AND password = '$PASSWORD'";
-        $resultado = mysqli_query($conexion, $consulta);
+        // Verifica si el usuario existe
+        $consulta_usuario = "SELECT * FROM personal WHERE usuario = '$USUARIO'";
+        $resultado_usuario = mysqli_query($conexion, $consulta_usuario);
 
-        if (!$resultado) {
+        if (!$resultado_usuario) {
             die("Error en la consulta: " . mysqli_error($conexion));
         }
 
-        $filas = mysqli_num_rows($resultado);
-
-        if ($filas) {
-            $row = mysqli_fetch_assoc($resultado);
-            $_SESSION['usuario'] = $row['usuario'];
-            $_SESSION['correo'] = $row['correo'];
-            $_SESSION['ID'] = $row['ID'];
-            header("Location: home.php");
+        if (mysqli_num_rows($resultado_usuario) === 0) {
+            // El usuario no existe
+            header("Location: index.php?error=usuario");
             exit();
         } else {
-            // Incluye el archivo index.php en lugar de index.html
-            include("index.php");   
+            // El usuario existe, verifica la contraseña
+            $row = mysqli_fetch_assoc($resultado_usuario);
+            if ($row['password'] === $PASSWORD) { // Cambia esto si usas md5 o hashing
+                // Contraseña incorrecta
+                header("Location: index.php?error=password");
+                exit();
+            } else {
+                // Credenciales correctas
+                $_SESSION['usuario'] = $row['usuario'];
+                $_SESSION['correo'] = $row['correo'];
+                $_SESSION['ID'] = $row['ID'];
+                header("Location: home.php");
+                exit();
+            }
         }
 
-        mysqli_free_result($resultado);
+        mysqli_free_result($resultado_usuario);
         mysqli_close($conexion);
     }
 } else {

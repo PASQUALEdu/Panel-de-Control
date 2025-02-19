@@ -9,14 +9,13 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Tu hoja de estilos personalizada -->
   <link rel="stylesheet" href="css/styles_inicio_sesion.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <title>Inicio</title>
   <style>
-    /* Estilos para el mensaje de error */
+    /* Estilos para los mensajes de error */
     .error-message {
       color: red;
       font-size: 14px;
-      margin-top: 10px;
+      margin-top: 5px;
       display: none; /* Oculto por defecto */
     }
   </style>
@@ -24,24 +23,33 @@
 <body>
   <div class="container" id="container">
     <div class="form-container sign-in">
-      <form id="loginForm" action="iniciar_sesion.php" method="POST" onsubmit="return validateCredentials()">
+      <form id="loginForm" action="iniciar_sesion.php" method="POST">
         <h1>INICIAR SESIÓN</h1>
         <hr>
-        <?php if (isset($_GET['error'])): ?>
-          <p class="error"><?php echo $_GET['error']; ?></p>
-        <?php endif; ?>
+
+        
 
         <i class="fa-solid fa-user"></i>
         <label for="usuario">Usuario</label>
         <input type="text" name="usuario" id="usuario" placeholder="Nombre de usuario" required>
 
+        
+
+
         <i class="fa-solid fa-unlock"></i>
         <label for="password">Contraseña</label>
         <input type="password" name="password" id="password" placeholder="Contraseña" required>
         
-        <!-- Mensaje de error -->
-        <p id="errorMessage" class="error-message">Datos incorrectos, intente de nuevo</p>
-        
+        <!-- Mensaje de error para contraseña incorrecta -->
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'password'): ?>
+          <p id="errorPassword" class="error-message" style="display: block;">Contraseña incorrecta</p>
+        <?php endif; ?>
+
+        <!-- Mensaje de error para usuario incorrecto -->
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'usuario'): ?>
+          <p id="errorUsuario" class="error-message" style="display: block;">Usuario incorrecto</p>
+        <?php endif; ?>
+
         <hr>
         <button type="submit">Iniciar Sesión</button>
       </form>
@@ -56,26 +64,23 @@
     </div>
   </div>
 
+  <!-- Script para limpiar los campos en caso de error -->
   <script>
-    function validateCredentials() {
-      // Obtener los valores de los campos de usuario y contraseña
-      const usuario = document.getElementById('usuario').value;
-      const password = document.getElementById('password').value;
+    // Verifica si hay un error en la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+      // Limpia los campos del formulario
+      document.getElementById('usuario').value = '';
+      document.getElementById('password').value = '';
 
-      // Credenciales correctas
-      const correctUsuario = 'admin';
-      const correctPassword = '456';
-
-      // Validar las credenciales
-      if (usuario !== correctUsuario || password !== correctPassword) {
-        // Mostrar el mensaje de error
-        document.getElementById('errorMessage').style.display = 'block';
-        return false; // Evita que el formulario se envíe
-      }
-
-      // Ocultar el mensaje de error si las credenciales son correctas
-      document.getElementById('errorMessage').style.display = 'none';
-      return true; // Permite que el formulario se envíe
+      // Oculta el mensaje de error después de 2.5 segundos
+      setTimeout(() => {
+        if (urlParams.get('error') === 'usuario') {
+          document.getElementById('errorUsuario').style.display = 'none';
+        } else if (urlParams.get('error') === 'password') {
+          document.getElementById('errorPassword').style.display = 'none';
+        }
+      }, 3000); // 2500 milisegundos = 2.5 segundos
     }
   </script>
 </body>

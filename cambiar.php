@@ -25,8 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($resultado) {
             $mensaje = "Contraseña cambiada exitosamente.";
+            header("Location: index.php"); // Redirige al index
+            exit();
         } else {
             $error = "Hubo un problema al actualizar la contraseña. Intenta de nuevo.";
+            die("Error en la consulta: " . mysqli_error($conexion)); // Muestra el error de MySQL
         }
     }
 }
