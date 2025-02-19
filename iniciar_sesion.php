@@ -37,7 +37,7 @@ if (isset($_POST['usuario']) && isset($_POST['password'])) {
         } else {
             // El usuario existe, verifica la contraseña
             $row = mysqli_fetch_assoc($resultado_usuario);
-            if ($row['password'] === $PASSWORD) { // Cambia esto si usas md5 o hashing
+            if ($row['password'] !== $PASSWORD) { // Cambia esto si usas md5 o hashing
                 // Contraseña incorrecta
                 header("Location: index.php?error=password");
                 exit();

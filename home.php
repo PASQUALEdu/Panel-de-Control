@@ -73,58 +73,26 @@ echo '<!DOCTYPE html>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-    .contract-card {
-        background: white;
-        padding: 1.25rem;
-        margin: 0.625rem;
-        border-radius: 0.625rem;
-        box-shadow: 0 0.125rem 0.3125rem rgba(0,0,0,0.1);
-    }
-    .status {
-        padding: 0.3125rem 0.625rem;
-        border-radius: 0.3125rem;
-    }
-    
-    @media (max-width: 768px) {
-        .sidebar {
-            width: 100%;
-            position: relative;
-            height: auto;
-        }
-        
-        .main-content {
-            margin-left: 0;
-            padding: 1rem;
-        }
-        
         .contract-card {
-            margin: 0.5rem 0;
-            padding: 1rem;
+            background: white;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
-        .header {
-            padding: 1.5rem;
-        }
-        
-        .header h1 {
-            font-size: 1.5rem;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .contract-card p {
-            font-size: 0.875rem;
-        }
-        
         .status {
-            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
         }
-        
-        .sidebar h2 {
-            font-size: 1.5rem;
-        }
-    }
-</style>
+        .pagado { background: #4CAF50; }
+        .pagar { background: #FF5722; }
+        .no-pagado { background: #F44336; }
+        .desconocido { background: #9E9E9E; }
+        .error-msg { color: #D32F2F; margin-top: 5px; }
+        .success-msg { color: #388E3C; margin-top: 5px; }
+        .info-msg { color: #1976D2; margin-top: 5px; }
+    </style>
 </head>
 <body>
 <div class="sidebar">
