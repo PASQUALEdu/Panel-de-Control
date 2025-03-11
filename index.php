@@ -12,7 +12,7 @@
   <title>Inicio</title>
   <style>
     /* Estilos para los mensajes de error */
-    .error-message {
+    .error-message {  
       color: red;
       font-size: 14px;
       margin-top: 5px;
