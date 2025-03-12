@@ -1,26 +1,10 @@
-const body = document.querySelector('body'),
-      sidebar = body.querySelector('nav'),
-      toggle = body.querySelector(".toggle"),
-      searchBtn = body.querySelector(".search-box"),
-      modeSwitch = body.querySelector(".toggle-switch"),
-      modeText = body.querySelector(".mode-text");
-
-
-toggle.addEventListener("click" , () =>{
-    sidebar.classList.toggle("close");
-})
-
-searchBtn.addEventListener("click" , () =>{
-    sidebar.classList.remove("close");
-})
-
-modeSwitch.addEventListener("click" , () =>{
-    body.classList.toggle("dark");
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.querySelector('.toggle-btn');
+    const sidebar = document.querySelector('.sidebar');
     
-    if(body.classList.contains("dark")){
-        modeText.innerText = "Light mode";
-    }else{
-        modeText.innerText = "Dark mode";
-        
-    }
-});
+    toggleBtn.addEventListener('click', () => {
+      // Alternativamente, podrías usar click para forzar el estado "open"
+      sidebar.classList.toggle('open');
+    });
+  });
+  

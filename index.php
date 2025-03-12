@@ -8,7 +8,7 @@
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" 
         crossorigin="anonymous" referrerpolicy="no-referrer" />
   <!-- Tu hoja de estilos personalizada -->
-  <link rel="stylesheet" href="css/styles_inicio_sesion.css" />
+  <link rel="stylesheet" href="css/iniciar_sesion.css" />
   <title>Inicio</title>
   <style>
     /* Estilos para los mensajes de error */
